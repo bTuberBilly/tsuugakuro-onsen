@@ -1,4 +1,4 @@
-# Tsuugakuro ~Natsu Mado~ Summer Window
+# Tsuugakuro \~Natsu Mado\~ Summer Window
 *A simple handmade ONSEN Port*
 
 ## Table of Contents
