@@ -1,0 +1,1850 @@
+;gameid TsuugakuroONSEN
+;$S640,464
+*define
+
+defsub togglelang
+
+savename "Save", "Load", "`Diary "
+rmenu "Save",save,"Load",load,"`Return to Title",reset,"`Quit Game",end
+
+numalias curlang,128
+
+numalias tmptxt,129
+
+defsub langjp
+defsub langen
+
+savdir "sav"
+
+game
+*start
+mov %99,0
+mov %64,1
+
+*restart
+gosub *setwindowcaption
+
+abssetcursor 0,":l/3,160,2;img/blank.png",446,422
+abssetcursor 1,":l/3,160,2;img/blank.png",446,422
+
+bg "img/boot.png"
+setwindow2 "img/blank.png"
+wait 2000
+
+bg "TSR_LOGO.GRP"
+setwindow2 "img/blank.png"
+wait 2000
+
+
+; protection against resets maybe?
+if %99=1 goto *titlebgset
+loadgame 99
+
+*titlebgset
+savegame 99
+bg "TSR_TIT.GRP"
+bgm "NGMUS0C.MID"
+if %64=0 stop
+
+setwindow2 "img/blank.png"
+
+lsp 0,":c;TSR_STA.GRP",485,385
+
+` \
+
+csp 0
+
+*mainmenu
+gosub *setwindowcaption
+gosub *settitlewindow
+
+abssetcursor 0,":l/3,160,2;TSR_MOU.GRP",446,422
+abssetcursor 1,":l/3,160,2;TSR_MOU.GRP",446,422
+
+if %curlang=1 goto *showmainmenu_en
+
+*showmainmenu
+select "始めから",*newgame,
+"続きから",*loadgame,
+"設定/Settings",*submenu,
+"終了？",*quitgame
+
+*showmainmenu_en
+select "`New Game",*newgame,
+"`Load Game",*loadgame,
+"Settings/設定",*submenu_en,
+"Quit?",*quitgame
+
+*submenu
+if %99=1 goto *fullsubmenu
+select "ミュージック",*subsound,
+"アニメーション",*subanime,
+"言語/Language",*sublang,
+"設定終了",*mainmenu
+
+*submenu_en
+if %99=1 goto *fullsubmenu_en
+select "Music",*subsound_en,
+"Animation",*subanime_en,
+"Language/言語",*sublang,
+"`Exit Settings",*mainmenu
+
+*fullsubmenu
+select "ミュージック",*subsound,
+"アニメーション",*subanime,
+"言語/Language",*sublang,
+"CG鑑賞",*subcg,
+"設定終了",*mainmenu
+
+*fullsubmenu_en
+select "Music",*subsound_en,
+"Animation",*subanime_en,
+"Language/言語",*sublang,
+"`CG Gallery",*subcg_en,
+"`Exit Settings",*mainmenu
+
+*subsound
+select "ON",*unmute,
+"OFF",*mute,
+"キャンセル",*submenu
+reset
+
+*subsound_en
+select "ON",*unmute_en,
+"OFF",*mute_en,
+"Cancel",*submenu
+reset
+
+*quitgame
+systemcall end
+
+*mute
+stop
+; BILLYDEBUG VAR 64, WHETHER OR NOT MUSIC PLAYS
+; 0 = MUTED, 1 = PLAY
+mov %64,0
+savegame 99
+goto *submenu
+
+*mute_en
+stop
+; BILLYDEBUG VAR 64, WHETHER OR NOT MUSIC PLAYS
+; 0 = MUTED, 1 = PLAY
+mov %64,0
+savegame 99
+goto *submenu_en
+
+*unmute
+bgm "NGMUS0C.MID"
+mov %64,1
+savegame 99
+goto *submenu
+
+*unmute_en
+bgm "NGMUS0C.MID"
+mov %64,1
+savegame 99
+goto *submenu_en
+
+*subanime
+select "ON",*animon,
+"OFF",*animoff,
+"キャンセル",*submenu
+reset
+
+*subanime_en
+select "ON",*animon_en,
+"OFF",*animoff,
+"Cancel",*submenu_en
+reset
+
+*animon
+goto *submenu
+
+*animon_en
+goto *submenu_en
+
+*animoff
+goto *secretstaffroom
+
+*sublang
+select "日本語",*setjp,
+"English",*seten
+
+*setjp
+mov %curlang,0
+savegame 99
+goto *mainmenu
+
+*seten
+mov %curlang,1
+savegame 99
+goto *mainmenu
+
+*subcg
+gosub *setmainwindow
+`CGギャラリーがまだ作ってません。今、タイトルに戻ります。\
+goto *restart
+
+*subcg_en
+gosub *setmainwindow
+`The CG gallery has not yet been implemented.@ The game will now reset.\
+goto *restart
+
+*loadgame
+systemcall load
+reset
+
+*newgame
+; images are at x16, y32
+; Joshi A #ff8080
+; Joshi B #80ff80
+;446 425
+;567 31
+
+; Prologue
+gosub *setmainwindow
+bgm "NGMUS00.MID"
+if %64=0 stop
+
+lsp 10,":c;TSR_PET0.GRP",16,32
+lsp 20,"img/9-3.png",567,31
+;":s#FFFFF`Sep 3"
+langjp "`#ff8080【女子A】#ffffff"
+langjp "「ねぇ、知ってるの…隣りの聖E女学院に幽霊がでたんだって！」\"
+langen "`#ff8080Girl A#ffffff"
+langen "Hey, did you hear..? I heard St. E Girls' Acadamy next door is haunted!\"
+
+langjp "`#80ff80【女子B】#ffffff"
+langjp "「えっ～うそ！？、わたしあそこの学校、受験したんだよッ！！・・・よかったＥ女学院に行かなくて」\"
+langen "`#80ff80Girl B#ffffff"
+langen "No way, really!? I took their entrance exam!! ...I'm glad I didn't end up going there.\"
+
+langjp "`#ff8080【女子A】#ffffff"
+langjp "「あなたは行きたくても落ちたんでしょ？」\"
+langen "`#ff8080Girl A#ffffff"
+langen "Well, you wanted to go, but you wound up failing, right?\"
+
+langjp "`#80ff80【女子B】#ffffff"
+langjp "「・・・で、どういうのが出たの？」\"
+langen "`#80ff80Girl B#ffffff"
+langen "...Anyway, what kind of ghost is it?\"
+
+langjp "`#ff8080【女子A】#ffffff"
+langjp "「私もよくは知らないんだけど、トイレで出たんだって…」\"
+langen "`#ff8080Girl A#ffffff"
+langen "I don't really know, but I heard it comes out of the toilet...\"
+
+langjp "`#80ff80【女子B】#ffffff"
+langjp "「え～～～ットイレで何が出たの！？」\"
+langen "`#80ff80Girl B#ffffff"
+langen "Huuuhh!? What came out of the toilet!?\"
+
+langjp "`#ff8080【女子A】#ffffff"
+langjp "「なっ・・・何も聞いてなかったの。幽霊よ、ゆ・う・れ・い・・・」\"
+langen "`#ff8080Girl A#ffffff"
+langen "W...were you not even listening? A ghost!"
+langen "G! H! O! S! T!\"
+
+langjp "`#80ff80【女子B】#ffffff"
+langjp "「な～んだ、わたしてっきりトイレでナニが・・・やっと出たのかと・・・」\"
+langen "`#80ff80Girl B#ffffff"
+langen "Ohh. I thought something...else...came out of the toilet.\"
+
+langjp "`#ff8080【女子A】#ffffff"
+langjp "「下品・・・」\"
+langen "`#ff8080Girl A#ffffff"
+langen "Gross...\"
+
+langjp "`#80ff80【女子B】#ffffff"
+langjp "「でもうちの学校ってそういうのほんとに聞かないね」\"
+langen "`#80ff80Girl B#ffffff"
+langen "But I haven't heard about things like that at our school.\"
+
+langjp "`#ff8080【女子A】#ffffff"
+langjp "「普通の学校はやっぱりそういうのはないよ。確かに怪談話の一つ位はあったほうが、こっちとしては面白いんだけどね」\"
+langen "`#ff8080Girl A#ffffff"
+langen "Duh, you don't hear about that kind of stuff at a normal school. But having at least one ghost story could make things more interesting.\"
+
+langjp "`#80ff80【女子B】#ffffff"
+langjp "「でもあったらあるでイヤかもね」\"
+langen "`#80ff80Girl B#ffffff"
+langen "I dunno if that'd be a good thing.\"
+
+langjp "`#ff8080【女子A】#ffffff"
+langjp "「そうねっ・・・フフフッ・・・」\"
+langen "`#ff8080Girl A#ffffff"
+langen "True. Hehehe...\"
+
+langjp "`#80ff80【女子B】#ffffff"
+langjp "「・・・」\"
+langen "`#80ff80Girl B#ffffff"
+langen "...\"
+
+csp 10
+
+if %curlang=1 gosub *endemoquit
+
+９月も初めに入り、みんなはまだ夏休みの疲れが抜けきれない日々を過ごしていた。\
+
+そんな生徒達の明るい声が飛び交っていた昼間の校舎。\
+
+今はその面影もなく静まりかえり、月の明かりだけが校舎を照らしだしていた。\
+
+そんな夜の学校で、今何かが始まる。\
+
+; Our main cast gets introduced
+; Hyouga #80ffff tsr_fay0.GRP
+; Jura #ff80ff tsr_faj0.GRP
+; Sanjou #ff80ff tsr_fas0.GRP
+; Hakua #ffc080 tsr_faa0.GRP
+lsp 10,":c;TSR_PET1.GRP",16,32
+bgm "NGMUS03.MID"
+if %64=0 stop
+
+あたし達仲良し三人組は、学校の前にいた。\
+
+どうしてこういう経緯になったのかというと、隣りの学校ではどうやら幽霊が出たという噂話で盛り上がっているらしい。\
+
+あたしはこの話を小耳に挟み思い付いた。
+自分の学校にはこの手の話題がない、なければないでほしい、ほしい物は作ればいいと・・・。\
+
+こうしてあたしとその仲間達は噂を作る為、深夜の学校へとやってきたのだ。\
+
+時刻は、ＰＭ１０：５２。\
+
+女の子３人がうろつくには遅い時間だが、幽霊話で盛り上がるには少し早い位である。\
+
+待ち合わせ時間は１１時であったが、その１０分前にはみんな学校に集まっていた。\
+
+今頃の夜は少し風が吹いており、肌寒ささえ感じさせる。\
+
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「それにしてもあなた達の格好は何？！、もう少し動きやすい格好で来てよ！！」\
+csp 3
+
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「だって氷雅ちゃん、何も言わないで集合をかけるんだもん」\
+csp 3
+
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「わたくし、このような服しか持って無いんです」\
+csp 3
+
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「はぁ～～っ・・・まあいいか」\
+csp 3
+
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ねぇ氷雅ちゃん。やっぱりこんな事やめようよ・・・」\
+csp 3
+
+この子供じみた服を着ているのは花見樹羅。\
+
+童顔で体もまだ子供みたいだけど、あたし達の中では一番常識的な考え方をしていると思う。\
+
+特技は植物と話ができる事らしい。\
+
+特にサボテンとする会話は、毎日欠かさないそうだ。\
+
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「こんな事とは何よ！！これも学園生活を楽しくする為にするのよ！」\
+csp 3
+
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ううっ・・・」\
+csp 3
+
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「樹羅さんもしかして、もう眠いんですの？」\
+csp 3
+
+そしてこの場違いな格好の娘は月見白亜。\
+
+少しずれた所もあり空想虚言症気味ではあるが、優しくて正義感が強い娘である。\
+
+白亜は自然の声を聞くことができるらしい。\
+
+時々、誰かと話す訳でもなく会話をしている時があるらしい。\
+
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ちがうよ白亜ちゃん。夜中の学校ってなんかさぁ不気味だから・・」\
+csp 3
+
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「なに怖がってるの、ほら行きましょう」\
+csp 3
+
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「でもさぁ宿直の先生に見つかったらどうするの？」
+csp 3
+
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「もし見つかったら、忘れ物を取りにきたとでも言えばいいんだから」
+csp 3
+
+そしてあたしが、この超常現象研究会のリーダーで雪見氷雅。\
+
+あたしは自分で言うのもなんだけど、何事にもガンバリ屋で頭脳明晰、とにかく超常現象が大好きなのであります。\
+
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「それじゃ、そろ学校に忍び込みましょうか」\
+csp 3
+
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「でも、どうやって入るの」\
+csp 3
+
+この言葉から、樹羅もどうやら覚悟を決めたらしい。\
+
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「やっぱりこういう場合、正門から正々堂々という訳にはいかないわね」\
+csp 3
+
+あたしは学校の正門が閉じられているのを一応確認し、そう答えた。\
+
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「あらっ、それではどういたしましょう」\
+csp 3
+
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「でもこうして改めて見ると、この正門デカイねっ！」\
+csp 3
+
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「樹羅がちっちゃいから、そう思うんじゃないの」\
+csp 3
+
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「氷雅ちゃんひどいっ！樹羅だってまだこれから・・・」\
+csp 3
+
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「んんっ・・・まあ、さすがにコレじゃ乗り越えられる高さじゃないね」\
+csp 3
+
+そういって樹羅の言葉を遮ると、目の前にそびえる門を見て唾を飲み込んだ。\
+
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「どこか入れそうな所を探してみるか」\
+csp 3
+
+mov %0,0
+mov %1,0
+
+; BILLYDEBUG option chain goes here
+*prologuesearch
+gosub *setmainwindow
+これからどうする。\
+gosub *setdecisionwindow
+select "正門を調べる",*prologue1,
+"学校をまわる",*prologue2,
+"裏門へ行く",*prologue3
+
+
+*prologue1
+;logic for handling the scenes goes here
+gosub *setmainwindow
+if %0=0 goto *prologue101
+if %0=1 goto *prologue102
+if %0>=2 goto *prologue103
+
+*prologue101
+あたし達は正門を調べてみることにした。\
+
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「樹羅ちょっとこの柱の間を通ってみて！」\
+csp 3
+
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「んしょ、んしょ・・・ってこんなの通れる訳ないでしょ！」\
+csp 3
+
+樹羅が門の柱の間を抜けようとするが、とても人の通れるような隙間ではなかった。\
+inc %0
+goto *prologuesearch
+
+*prologue102
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「よしっ、いっちょこの門をよじ昇ってみるか！」\
+csp 3
+あたしはそういうと目の前にそびえる門を見た。そして自分があまりにも無力な事を思い知る。\
+inc %0
+goto *prologuesearch
+
+*prologue103
+あたしは正門のまわりをくまなく調べてみることにした。\
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「もう少し他をあたってみたほうが、よろしいんじゃありませんか」\
+csp 3
+あたしは調べるのをやめると、他を見てみることにした。\
+goto *prologuesearch
+
+*prologue2
+;logic for handling scenes goes here
+gosub *setmainwindow
+if %0>=2 && %1>=1 goto *prologue202
+
+*prologue201
+あたし達は、学校の周りをまわってみることにした。\
+学校のまわりは金網のフェンスで覆われていた。\
+goto *prologuesearch
+
+*prologue202
+;this one proceeds to *prologuecont after all other scenes have been viewed
+どうやらここのフェンスが、簡単に乗り越えられそうだ。\
+あたしは金網に足先を掛けながらよじ昇ると、そのまま反対側へと飛び越える。\
+白亜もあたしに続いて、同じようにしてフェンスを軽く飛び越える。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「白亜ちゃん、よくその格好で飛び越えられたね」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ええ運動神経は良い方ですから」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「そういう問題じゃ・・・」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「・・・ねぇ、やっぱり樹羅も行くの？」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「当然。あたりまえでしょ」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「樹羅ミニだから・・・」\
+csp 3
+樹羅は頬の辺りを少し赤く染めるとそう答えた。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「そんなあらためなくても、前から知ってるよ！」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「・・・な、なんか違う。樹羅はミニスカートだっていったの・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「だぁ！女の子しか見てないんだから大丈夫だって！！」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「あらっそんな口調で言いますと、そのように聞こえませんよ」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「うるさいっ」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「こらっダメですよ、女の子がそんな乱暴な言葉を使ったら」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「・・・樹羅、早くしてよ」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「う、うん」\
+csp 3
+樹羅は、あたし達に見守られる中で金網をよじ昇っていった。\
+goto *prologuecont
+
+*prologue3
+;logic for handling scenes goes here
+gosub *setmainwindow
+if %1=0 goto *prologue301
+if %1>=1 goto *prologue302
+
+*prologue301
+あたし達は、裏門へと行ってみることにした。\
+裏の門は正門に比べると低く、乗り越えられそうではあるが乱雑に立ち並ぶ木々が邪魔をして、上の隙間を覆っている。\
+inc %1
+goto *prologuesearch
+
+*prologue302
+ここはさっきも調べたが、忍び込めそうな所はない。\
+goto *prologuesearch
+
+*prologuecont
+lsp 10,":c;TSR_PJY0.GRP",16,32
+bgm "NGMUS05.MID"
+if %64=0 stop
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「えぇ～～～っ、こんな高い所から飛び降りるの？」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「そんなに高かった？！」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「樹羅さんには高く感じられるんじゃないですか」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「はは～ん、そうか」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「白亜ちゃんまでヒドイっ！！」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「あらっ、ごめんなさい。もし樹羅さんの心を傷つけたんでしたら謝りますわ」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「べ、別にいいんだけどさ、グスッ・・・」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「それじゃ飛び降りるよ！」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「あッ！バカッ！！」\
+csp 3
+あたしが止めるよりも早く、樹羅の体はフェンスから離れていた。\
+ドスンッ\
+
+lsp 10,":c;TSR_PJY1.GRP",16,32
+樹羅は大きな音とともに、尻餅をつく形で地面へと叩き付けられた。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「いったあぁ～～～いっ！！！」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「だから言わんこっちゃない！」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「飛び降りられないような高さだったら、金網をつたって降りればいいのに・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「あらっそれは名案ですわっ」\
+csp 3
+そういって白亜はポンッと両手を叩き合わせる。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「いたたたっ！できれば飛び降りる前に言ってほしかったのに・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「それぐらい、すぐ思いつけ！」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ああっ！真っ黒に汚れちゃった！！」\
+csp 3
+樹羅はお尻の方からスカートをまくりあげると、腰をひねって自分のお尻を確認した。\
+
+lsp 10,":c;TSR_PJY2.GRP",16,32
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ねえ・・・アザか何かできてない」\
+csp 3
+樹羅は心配そうな声でそう呟いた\
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ええ、少し痣になってますわね」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「え～～～っ！！あしたからどうしよう！」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「どうせ人様に見せる様な物でもないでしょ」\
+csp 3
+そういってあたしも樹羅のかわいらしい下着を拝見する。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「あああっ、こりゃヒドイ！すぐ洗ったほうがいいよ」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「こんな事もあろうかと、わたくし洗剤ならいつも持ち歩いてますわっ」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「・・・・・・」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「・・・・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「そ、それじゃ早く洗ったほうがいいなっ」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「えっ！それって・・・」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「白亜ちゃん、替えの下着は持ってないの」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ごめんなさいね、今日は持ち合わせていないの・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「よしっ、これで決まり！！」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「勝手に決めないでぇ～～～っ！」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「でもバイキンが入ったらいけないですし、やっぱり決まりですねっ！」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「うううっ、じゃあしょうがないか・・・」\
+csp 3
+ほんとにしょうがないのだろうかとあたしは思いつつ、面白いのでそのまま見守ることにした。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「ドキドキ」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ワクワク」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ねぇ、何か楽しんでない」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「えっ、そんなことないって！」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「そうですわ、わたくしも面白い展開になってきたなんて思っていませんわ・・・」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ま、まあ別にいいけどさっ・・・」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「でもこういうのってすごく恥ずかしいんだけどぉ」\
+csp 3
+樹羅はスカートをまくったまま、お尻のほうからショーツをおろしていった。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ねぇ、何だか恥ずかしいよぉ、それにスーしてるし・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「まあ自業自得だな」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「樹羅さんお似合いですわ」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「それって、全然うれしくないっ・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「・・・そ、それじゃあ、まず一階にある音楽室から行ってみよう」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ええ、音楽室で何かするんですの？」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「まあな」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「氷雅さんったら勿体つけちゃって、お顔がコワイですわよっ」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「もとから不気味なんでしょ！」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「じゅぅ～らぁ～～っ！・・・」\
+csp 3
+あたしは樹羅をにらみつける。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ああ～ん、ごめんなさいっ・・・」\
+csp 3
+こうしてあたし達一行は、音楽室へと向かった。\
+
+セーブしますか？
+
+select "はい",*prologuesave,
+"いいえ",*chapter1
+
+*prologuesave
+systemcall save
+
+*chapter1
+csp 10
+;`Thank you for playing the prologue demo.\
+;`The game will now reset.\
+;reset
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ううっ、こ・怖いよぉ～～っ」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「真夜中の音楽室って何かが出そうですわね」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「だからこそこうしてあたし達が来たんだろ」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「あらっそうでしたの。わたくしはてっきりまた・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「シっ！・・・・・・・・・」\
+csp 3
+あたしは人差し指を、自分の口元にそっとそえるとみんなを静かにさせた。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「・・・・・・・・・ど、どうしたの・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「・・・・・・・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「・・・・・・・・・」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「・・・・・・・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「あのうっ、やっぱり何も起こりませんねぇ・・・」\
+csp 3
+最初に沈黙を破ったのは白亜だった。\
+
+lsp 10,":c;TSR_PHY0.GRP",16,32
+bgm "NGMUS0F.MID"
+if %64=0 stop
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「うんっ、この学校には何もないのかなぁ。ほんとに幽霊が出れば、それはそれで楽だったんだけど」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「樹羅、例のものを・・・」\
+csp 3
+あたしは樹羅の背中のカバンを指さすとそう言った。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「う、うん」\
+csp 3
+樹羅はあたしに向かってカバンを手渡すと、物珍しそうにそれを見守る。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ねえ、氷雅ちゃんそれなに・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「まぁ、黙って見てて」\
+csp 3
+樹羅の質問を軽く受け流すと、そのままカバンへと視線を戻した。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ううっ・・・・・・」\
+csp 3
+あたしはカバンの中から、ゆっくりと機械のかたまりを取り出した。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「さあ、あたしのカワイイ子供達、いまこそその肉体に魂の息吹を吹き込んであげる」\
+csp 3
+あたしはその機械のかたまりをやさしい手つきでそっとふれると、指先でなでるようにしてスイッチをＯＦＦからＯＮへと入れた。\
+その機械のかたまりは、電源を投入されたことにより自分の与えられた使命を全うする為に活動し始める。\
+あたしは自分の頬を機械に近づけると、魂の鼓動をそこから感じとった\
+スリスリ\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「あああ～～んっ！うっとり」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「氷雅ちゃん機械にほおずりなんかして、何やってんだろう」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「氷雅さんは今、あの機械と心を通わせているんですわ」\
+csp 3
+
+lsp 10,":c;TSR_PHY1.GRP",16,32
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「この子の名前は、おねぼうサンディちゃん」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「この子は内蔵のタイマーにより、設定された時刻になると自動的に音楽室のアンプとスピーカーの間に割り込んで奇怪な音を流すの」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「各種センサーや、センサーフォロー用にドアの開閉、時間による開閉回数等の極少ない情報からでも中に人がいない事を確認できる仕組みになっているの」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「もちろんバッテリーの充電はアンプの予備電源から直接いただいてしまう、機能的で簡単かつ無駄のない動きをするのよ」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「白亜ちゃん、これって簡単な事なの」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「さぁ、氷雅さんにとっては簡単なんでしょうけれど、普通の女の子にはさっぱりわかりませんねぇ」\
+csp 3
+あたしは、左の拳を硬く握りしめたまま自分の演説に酔いしれると、おねぼうサンディを取付ける作業に取り掛かった。\
+
+csp 10
+あたしは机を足場にして、高い所に設置されているスピーカーへと手を伸ばす。\
+
+bgm "NGMUS04.MID"
+if %64=0 stop
+ポロ～ン\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「！」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「ねぇ、な・何いまの音・・・」\
+csp 3
+あたしはまだ取り付け作業をしていないおねぼうサンディの事を考え、今した音の事が気になった。\
+今すぐうしろを振り返りピアノを見るのは簡単な事だ。\
+しかし見てはいけない物を見てしまい、後で後悔するような気がする。\
+ピアノを見る聞かない事にするこれからどうする。\
+これからどうする。\
+
+gosub *setdecisionwindow
+select "ピアノを見る",*ch1piano,
+"聞かない事にする",*ch1ignore
+
+*ch1ignore
+gosub *setmainwindow
+あたしは今の音は、心の弱さから聞こえた幻聴であり、気のせいだと自分自身に言い聞かせることにした。\
+ポン・・ポロロロ～～～ン\
+これは幻だと言い聞かせたあたしに、ピアノの音は情け容赦なく襲いかかる。\
+
+*ch1piano
+gosub *setmainwindow
+あたしは、思い切ってピアノを見てみる事にした。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「・・な、何やってんの！？」\
+csp 3
+
+*ch1cont
+lsp 10,":c;TSR_PHA0.GRP",16,32
+そこには白亜がピアノの鍵盤に指先を置いていた。\
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ええ、わたくしピアノのお稽古をしていますから皆さんに一曲聞いて頂こうかと・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「それにピアノさんがわたくしに引いてほしそうな顔をしていたから」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「どんな顔だ！・・・なんでこんな時に、まぎらわしい事してんだよ」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「氷雅さん、言葉使いが・・・」\
+csp 3
+ガタン\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ねぇ、いま変な音がしなかった」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「だから、それは白亜がピアノを・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ええっ、何かあちらの方から物音が・・・」\
+csp 3
+みんなにそう言われて、あたしは音楽室の時計で時刻を確認する。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「宿直が、見回りに来る時間にはまだ早いし・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「氷雅さん、そのような事まで調べていたんですか？！」\
+csp 3
+
+lsp 10,":c;TSR_PHY1.GRP",16,32
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「何事も準備しておいて、それに越した事はないでしょ」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「普段からそれだけ気配りしてれば忘れ物もないのにね」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「・・・・・、よっよし！それじゃ行ってみようか」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ええ～～っ、もうやめようよ」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「面白そうじゃん行こう！！」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「怖いよぉ・・・そ、それに・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「それに？」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「おトイレに行きたくなっちゃった」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「それじゃあ、あたし達は物音を確認しに行くから樹羅はトイレに行ってから来なよ」\
+csp 3
+
+lsp 10,":c;TSR_PJY3.GRP",16,32
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ひっ、ひとりにしないで・・・・・」\
+csp 3
+樹羅は今にも泣き出しそうな顔であたしにしがみついてきた。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「・・・・・」\
+csp 3
+樹羅のあまりにも真剣な表情に、あたしはしばらく考えをめぐらせた。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「んんっ、しょうがないか！白亜さきに見てきてくれる」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ええ、それじゃ先に行ってきますね」\
+csp 3
+そういうと白亜は一人音のした方へと歩いていく。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「気をつけてね」\
+csp 3
+その一言は白亜の後ろ姿を追いかけるようにして、闇へと吸い込まれていった。\
+
+csp 10
+このような状況で二手に分かれるのは危険ではあるが、遅れていって謎が謎のまま終わってしまうのだけは避けねばならなかった。\
+こうしてあたしと樹羅、白亜の二組に分かれて行動することになった。\
+白亜は先程の物音のしたと思われる所へ、恐る近づいていった。\
+カタン・・・カタン・・・・・・\
+廊下に響きわたる足音は、彼女自身を歓迎するかのように鳴り響く。\
+そして音の出所と思われる保健室の前で、足をゆっくりと止めた。\
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ここから、聞こえましたような・・・」\
+csp 3
+そう思うが早いか、白亜は右手の指先で保健室の扉をそっと開けていた。\
+そしてそのまま闇の中へと溶けて消えていった。\
+
+セーブしますか？
+
+select "はい",*chapter1save,
+"いいえ",*chapter2
+
+*chapter1save
+systemcall save
+
+*chapter2
+bgm "NGMUS09.MID"
+if %64=0 stop
+lsp 10,":c;TSR_PJY4.GRP",16,32
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「氷雅ちゃん、真夜中のおトイレってものすごく怖いね」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「そんなのいいから、早く済ませてよ！」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「う、うん・・・」\
+csp 3
+そういって樹羅はトイレの個室に入っていった。\
+入ったと思ったら、すぐ個室の戸が開く。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ひょ！氷雅ちゃん！！」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「な、何かいたのっ！」\
+csp 3
+
+lsp 10,":c;TSR_PJY3.GRP",16,32
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「・・・い、一緒に入って！・・・・」\
+csp 3
+そう言って先程と同じ目であたしの事を見つめる。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「・・・なっ・・何、あまえてんだっ！！」\
+csp 3
+いきなりのその一言に、あたしはあせりつつもそう答えていた。\
+どうも樹羅のこの表情には弱いらしい。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「だ、だってぇっ怖いんだもの・・・」\
+csp 3
+
+bgm "NGMUS01.MID"
+if %64=0 stop
+キャァァ～～～ッ\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「この声は白亜の悲鳴だ！！樹羅行くぞ！」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「まっ、待って・・・もうオシッコ我慢できないよぉ・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「んじゃ、適当に済ませてすぐに来なよ！」\
+csp 3
+樹羅に向かってそう言い残すと、あたしは声のした方へ向かって走っていった。\
+
+lsp 10,":c;TSR_PJY4.GRP",16,32
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ううっどうしよう、やっぱり恐いよぉ」\
+csp 3
+そう言いながらも、樹羅は氷雅の後に続くような形でついていった。\
+トイレから保健室へと続く廊下は結構長く、途中には下駄箱や職員室、校長室が並んでいた。\
+樹羅が下駄箱の辺りにまで差し掛かると、急におなかの辺りをおさえて座り込んだ。\
+どうやら尿意を催していたせいで、おなかの下に軽い痛みを憶えていたようだ。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「・・・ううっ！ど、どうしよう・・・・・」\
+csp 3
+
+stop
+カタッ\
+すると今までいたトイレのほうから、軽い物音が聞こえてきた。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「だ、誰かいるの・・・」\
+csp 3
+そのたった一言は声が裏がえっており、樹羅の恐怖心が見てとれる。\
+樹羅は後ろを振り返ると、自分の首を上下左右に動かし廊下の隅々までを確認した。\
+しかし物音を発したと思える物は何もなく、逆に恐怖心をあおることになる。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「よしっ・・・こ、こうなったら急いで氷雅ちゃんに追いつこう」\
+csp 3
+樹羅はそう言って走り出そうとするが、言葉とは裏腹に足がブルと震え前へと進むことができなかった。\
+樹羅は目を軽くつむり気持ちを落ちつかせるため、2、3度深呼吸をする。\
+そして息を吐いた状態で、自分の胸を軽く撫で下ろすとゆっくり目を開けた。\
+樹羅はゆっくりとそして慎重に歩み始める。\
+しばらく歩いていると、そこにはこの学校の卒業生から贈呈された鏡があった。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「きゃっ・・・・・」\
+csp 3
+今の樹羅にとっては動くもの全てが恐怖の対象であって、それは鏡に写し出された自分の姿も例外ではなかった。\
+カタンカタン\
+その瞬間、樹羅の目の前を影に覆われた生き物のようなものがよぎる。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「キャァァァっ！！！！！」\
+csp 3
+
+bgm "NGMUS01.MID"
+if %64=0 stop
+lsp 10,":c;TSR_PJY5.GRP",16,32
+樹羅はその瞬間、床に向かって腰から崩れ落ちていた。\
+にゃあっ\
+どこから入り込んできたのか、黒と白と茶色とで彩られた三毛ネコが樹羅のほうに向かって、ニャアと鳴いた。\
+樹羅はその姿を見て、安心からくる大きなため息を小さな口から吐き出した。\
+いままで張りつめていた緊張の糸が緩むのと同時に、体全体の筋肉が緩んでいく。\
+すると樹羅はそのまま軽く目をつむり、我慢していた物を解放していった。\
+
+stop
+ちょろちょろちょろ・・・・・\
+黄色いその液体は、チロという音とともに床に流れ落ちていく。\
+その音は樹羅の心を落ちつかせていった。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「・・・はあ～っ、きもちいいっ・・・・・」\
+csp 3
+今の樹羅は恐怖や行為の恥ずかしさよりも、その快楽の世界に浸っていくのだった。\
+
+csp 10
+廊下には非常ボタンの赤、非常口の緑の薄暗い電灯、かろうじて入り込んでくる月の明かりだけが闇夜の中で浮かび上がる。\
+そしてあたしは、保健室の前へとたどり着いた。\
+扉を開けてよいものかどうか少し考えたが、迷っていてもしょうがないのでドアのノブへと手を差し延べた。\
+ノブはひんやりと冷えていて、ここ何年も人に触れられていないかのように、暖かさを感じさせない。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「白亜いるの・・・」\
+csp 3
+あたしは思い切ってドアを開いた。\
+
+セーブしますか？
+
+select "はい",*chapter2save,
+"いいえ",*chapter3
+
+*chapter2save
+systemcall save
+
+*chapter3
+キィーッ\
+普段からよく使い込まれていないのか、ちょうつがいが黄色い音を立てる。\
+そして中には、逆光により女性特有の丸みを帯びたシルエットが、闇夜に浮かび上がっていた。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「白亜なの？」\
+csp 3
+しばらくの沈黙が続く。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「白亜！？」\
+csp 3
+あたしは再度、彼女に向かって話しかける。\
+あたしの目は暗闇になれてきたのか、おぼろげながらその人物の姿が見えてきた。\
+
+bgm "NGMUS06.MID"
+if %64=0 stop
+lsp 10,":c;TSR_PSA0.GRP",16,32
+白亜じゃない！？\
+あたしは考えるよりも早く、その答えを導き出していた。\
+彼女の肌の色は血の気の引いたように青白く、透き通るような白さであった。\
+あたしは金縛りにあったかのようにその場で立ち尽くす。\
+長い時間と思われたその瞬間が過ぎていく。\
+あたしのシャツは体中から出る脂汗で、びっしょりになっていた。\
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「氷雅さん・・・」\
+csp 3
+あたしはその聞き覚えのある声で安心したのか体の硬直は解け、顔だけを軽くひねってそちらへ向ける。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「・・・なんだ、いたのか！」\
+csp 3
+
+lsp 10,":c;TSR_PHA1.GRP",16,32
+あたしの視線の先には、いつものおっとりとしている白亜がいた\
+白亜が無事でいたということは、この娘はいったいこんな夜遅くに何を・・・という疑問が頭に浮かぶ。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「それよりも、こちらの方は・・・」\
+csp 3
+あたしは先程から疑問に思っていたことを聞いてみることにした。\
+; BILLYDEBUG Kazami Sanjou?
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「紹介がまだでしたね。こちら風見三畳さん・・・わたくしのお友達ですわ」\
+csp 3
+その言葉を聞いた三畳という娘は、その真っ白い肌に赤いインクを落としたかのように、急激に頬を朱に染め上げていく。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「はぁ～っ、そうか・・・あたしはてっきり幽霊か何かかと・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「あら、良く分かりましたねぇ。わたくし始めは全然気付きませんでしたのよ」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「な～んだぁ・・・」\
+csp 3
+そこまでいって、あたしは白亜の言葉をもう一度頭の中で思い浮かべた。\
+
+lsp 10,":c;TSR_PHY2.GRP",16,32
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「あのぅ先程言ったことを、もう一回繰り返して言ってもらえます」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「こちらは風見三畳さんです。わたくしのお友達です」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「いやその後の・・・幽霊が何とか・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ああっ・・・彼女が幽霊だってはじめは気付かなかったんですのよ・・・」\
+csp 3
+白亜の言葉を最後まで聞き取る前に、あたしの視線はその少女に釘付けになっていた。\
+彼女が幽霊。\
+あたしはマジと三畳を見つめていた。\
+するとどうしたことか彼女の桜色に染まった頬の辺りを、一筋の涙がこぼれ落ちていく。\
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「あ、ごめんなさい・・・なにか懐かしくて・・・・・」\
+csp 3
+幽霊なのに・・・しゃべった、それも驚くほどハッキリとした口調で・・・。\
+あたしは自分のイメージと異なった為に、偏見にも似た感情を抱いていた。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「で、でもさっきの悲鳴は・・・」\
+csp 3
+
+lsp 10,":c;TSR_PHA1.GRP",16,32
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「氷雅さんをここに呼ぶのに、一番手っ取り早いと思いまして・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「あ・あの、もしかしてそれだけで・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「だって大声で名前を呼んだってなか聞こえないでしょ、それに悲鳴はよく声がとおりますから・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「まあ、たしかに・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「現に氷雅さん早く来てくれましたから」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「ははっ、そうですね・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「それでは三畳さん。もう一度始めから話して頂けますか？」\
+csp 3
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「・・・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「大丈夫です。怖がらないで・・・これでも氷雅さんはわたくしの親友ですから」\
+csp 3
+これでもの一言が少し気に掛かったが、話がややこしくなるので茶々はいれなかった。\
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「・・・は、はい・・・それでは少し長いですけれど聞いていただけますか？・・・」\
+csp 3
+
+これからどうする。\
+select "聞かない",*badend,
+"聞く",*trueend
+
+*badend
+あたしはこのまま彼女のペースにのまれるのはマズイと思った。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「白亜やっぱりやめて帰ろう！！」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「樹羅のことだって心配だし・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「・・・・・」\
+csp 3
+
+lsp 10,":c;TSR_PHA2.GRP",16,32
+そこまで言ったあたしの目に映った白亜は、いつもの彼女の雰囲気とは違っていた。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「ねぇ白亜どうしたの・・・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「ねぇ！ねえったらっ！！・・・・・」\
+csp 3
+白亜の目をじっとみつめていたあたしは、急に言い知れない不安と恐怖が押し寄せてくる。\
+そしてあたしはその場で気を失った。\
+ＧＡＭＥ　ＯＶＥＲ\
+mov %99,1
+csp -1
+goto *restart
+
+*trueend
+;`The true end has not yet been implemented.\
+;`The game will now restart.\
+;reset
+あたしと白亜の二人は無言でコクリとうなづくと、三畳の話を聞くため視線を彼女へと移した。\
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「それでは・・・」\
+csp 3
+そう言って彼女は、話を始める・・・・・。\
+
+lsp 20,"img/9-4.png",567,31
+bgm "NGMUS0B.MID"
+if %64=0 stop
+csp 10
+２時間後・・・。\
+
+lsp 10,":c;TSR_PSA1.GRP",16,32
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「うふっ、ちょっぴり甘酸っぱくてステキな思い出たちなんです」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「愛ってミラクルですわね・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「それにしても、よく喋るなぁ！！」\
+csp 3
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「あ、あっ・・ご、ごめんなさい」\
+csp 3
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「でも、まだ続きがあるんですよっ！！」\
+csp 3
+そういってさらに話は続いていく。\
+
+csp 10
+さらに２時間後・・・。\
+
+lsp 10,":c;TSR_PSA0.GRP",16,32
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「私のやまいが悪化してからというもの、病院からは一歩も出してもらうことさえゆるされず・・・」\
+csp 3
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「まさしくかごの中の黄色いカナリア、外へ飛び出して大空をはばたく事さえも許されないの・・・・」\
+csp 3
+
+csp 10
+さらにそれから１時間後・・・。\
+
+lsp 10,":c;TSR_PSA1.GRP",16,32
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「こんなに喋ったのは久しぶりです。なんかスッキリしました」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「そりゃスッキリするでしょう」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「まあ黄色いお日様が・・・夏って夜が明けるのが早いんですのね」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「でもこうやって、長いこと朝まで話してるとずっと昔からの親友みたいだよな！！」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ええ、そうですわね」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「まぁ心残りとしては、ここに樹羅がいなかったってことだけかな・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ええ、そうですわね」\
+csp 3
+あたしはそう言ってから、もう一人を忘れていた事に気がついた。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「そうだ樹羅は・・・」\
+csp 3
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「大丈夫ですよ、樹羅さんはスヤと寝ていますから」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「そうだろうな、お子様には夜更かしは似合わないからな・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ええ、そうですわね」\
+csp 3
+三畳はしばらくあたし達の顔を微笑ましく眺めていた。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「どうしたの三畳・・・」\
+csp 3
+
+; BILLYDEBUG - nudity, could be a good spot to offer an alt version of the script without it
+lsp 10,":c;TSR_PSA2.GRP",16,32
+lsp 3,":c;TSR_FAS0.GRP",488,312
+`#ff80ff【三  畳】#ffffff
+「う、ううんっ・・・なんでもないんです、それでは私そろ・・・」\
+csp 3
+そういってペコッと頭を下げると、そのまま朝日の中へと溶けていった。\
+
+csp 10
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ところで三畳さんどうして樹羅さんの名前を知っていたんでしょうか？・・・」\
+csp 3
+こうして、この事件は終止符を打った。\
+
+bgm "NGMUS02.MID"
+if %64=0 stop
+それから数時間の時が過ぎ、朝の学校は今まで通りの活気に溢れていた。\
+
+lsp 10,":c;TSR_PET0.GRP",16,32
+`#ff8080【女子Ａ】#ffffff
+「ねぇ、下駄箱の所の水たまり見たぁ！」\
+csp 3
+`#80ff80【女子Ｂ】#ffffff
+「うん、昨日から今日まで雨なんか降ってないのにね、あれなんなの？」\
+csp 3
+`#ff8080【女子Ａ】#ffffff
+「それがさ、色々噂されてんのよ」\
+csp 3
+`#80ff80【女子Ｂ】#ffffff
+「えぇ！まさか幽霊か何かなの・・・」\
+csp 3
+`#ff8080【女子Ａ】#ffffff
+「まだわからないんだけどね、実はそうかもしれないんだって！！」\
+csp 3
+`#80ff80【女子Ｂ】#ffffff
+「へぇうちの学校にもついに出たんだ。もっと詳しく聞かせてよっ！」\
+csp 3
+`#ff8080【女子Ａ】#ffffff
+「それがねぇ・・・実はねぇ・・・フフフッ」\
+csp 3
+`#80ff80【女子Ｂ】#ffffff
+「なんかあなたの方が怖いわ・・・」\
+csp 3
+
+lsp 10,":c;TSR_PET2.GRP",16,32
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「おい、あれって」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「・・・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「そういえば樹羅、あの後は・・・」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「う、ううん・・あれは猫が・・・だから・・・もらしてなんかいないよ！」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「もらしたの・・」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「・・・ど、どっ、どうしてわかったの！」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「樹羅は、ほんとに嘘をつくのが下手だな！」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「いいんだもん、樹羅は正直物なんだからっ」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「あのぅ・・・どうかしたんですかぁ・・・」\
+csp 3
+先に保健室に行っていた白亜には、話が見えていないらしく訪ねてきた。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「だから樹羅がしっき・・・・・」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「だめ～～～っ言っちゃダメ～～～ッ！！」\
+csp 3
+そこまで言って、あたしの言葉は樹羅の大声にかき消されてしまった。\
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「樹羅さんもしかして、あの後おなかを冷やしてしまい・・・あのぉ・おう〇ちを・・・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「そこまではしないって」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「夏だから、朝には乾いていると思って・・・だからっ・・・・・」\
+csp 3
+樹羅の言葉は、語尾が段々と小さくなっていった。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「まぁ結果よければなんとやらだな・・・」\
+csp 3
+そういってあたしは掌で樹羅の頭をやさしく撫でてやる。\
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「氷雅ちゃんが、樹羅の事をおいてきぼりになんかするから・・・ブツ」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「まだ根に持ってんのかよ、だからそのことはゴメンって謝ってるじゃない」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「別にいいんだけど・・・もう・・・過ぎた・・・こと・・だ・しぃ・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「く、暗い・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「え、ええっ・・・」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「でも三畳さん、何で私達の前に出てきたんでしょうか・・・」\
+csp 3
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「おおかたさみしくでもなったんじゃないのかな？」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「ねぇ三畳って誰の事？」\
+csp 3
+樹羅は元気を取り戻したのか、あたし達の話に首を突っ込んできた。\
+lsp 3,":c;TSR_FAY0.GRP",488,312
+`#80ffff【氷  雅】#ffffff
+「いいのか、聞いたら又おもらししちゃうぞ」\
+csp 3
+lsp 3,":c;TSR_FAJ0.GRP",488,312
+`#ff80ff【樹  羅】#ffffff
+「また言う！！！」\
+csp 3
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`#ffc080【白  亜】#ffffff
+「ああっ、あれは樹羅さんのオシッコでしたのね・・・」\
+csp 3
+こうして樹羅は、あたしと白亜にしばらくこのネタで冷やかされることとなったのでした\
+
+*credits
+bgm "NGMUS0E.MID"
+if %64=0 stop
+お　し　ま　い\
+　　通学路 ～夏窓～ 完全版\
+　　　 －　スタッフ　－\
+　　プログラム
+　　 大胆不敵\
+　　脚本・イベントプログラム
+　　ＭＯＣＨＡ\
+　　作画・キャラクター原案
+　　 ないぺた\
+　　　 制作・著作権
+　　　 ねころがーる\
+
+abssetcursor 0,"img/blank.png",0,0
+abssetcursor 1,"img/blank.png",0,0
+csp 10
+bg "TSR_END.GRP"
+\
+mov %99,1
+csp -1
+goto *restart
+
+*resetgame
+reset
+
+*setmainwindow
+bg "TSR_BACK.GRP"
+setwindow 28,372,26,23,16,16,1,2,20,1,0,"img/blank.png",0,0
+return
+
+*settitlewindow
+setwindow 495,360,20,23,18,18,0,2,20,1,1,"img/blank.png",490,355
+return
+
+*setdecisionwindow
+;setwindow 28,372,20,23,20,20,0,2,20,1,1,"img/blank.png",500,350
+setwindow 28,372,26,23,20,20,1,2,20,1,0,"img/blank.png",0,0
+return
+
+*secretstaffroom
+gosub *setmainwindow
+if %curlang=0 gosub *ssr_jp
+lsp 20,":c;img/BILLY.GRP",16,32
+`Congratulations on finding this secret staff room!\
+`Well, this one probably isn't as well-hidden as some of my others, huh? Hehe\
+`If you're new here, please allow me to introduce myself.\
+`My name is Billy Bass, but you can just call me Billy.\
+`I'm two for two in 2026 so far with old doujinsoft projects!\
+`This and PACONE both had issues when I originally purchased the floppies online, but I was somehow able to find listings for both games within like a month of each other.\
+`I may or may not have written about the PACONE story on my blog by the time this port goes out, so I'll spare you that story here.\
+`Anyway, I really enjoyed my time porting this game to ONSEN.@ Well, I was essentially reading and porting at the same time haha\
+`By the way, it's totally possible to find this before you finish the game, so I'll refrain from talking about the story itself here.\
+
+lsp 3,":c;TSR_FAA0.GRP",488,312
+`Naipeta's art, on the other hand...@ That was absolutely one of the highlights of finally getting this game working.\
+csp 3
+
+`Oh yeah, I don't think I mentioned that part.@/
+lsp 3,":c;img/otvdm.png",488,312
+` I found out about otvdm recently, which was crucial in finishing this project.\
+`If you're unaware of what otvdm is, it allows 16-bit Windows programs to run on versions of Windows that would otherwise not support them.\
+`And if you don't know what that meant, then there's not much else I can say on that front.\
+csp 3
+
+`This port was a solo effort this time around.@ That may change when I carve out some time to translate this game, but only time will tell.\
+`And I do mean carve some time out.@ As is usually the case, my plate continues to stay full.\
+`This isn't normally a problem, but there are some projects I really want to wrap up in the near future.\
+`Honestly, sitting here writing this is only able to distract me from my bigger projects by a small amount. orz\
+
+lsp 3,":c;img/anomalith.png",488,312
+`Speaking of things coming up soon, I'm actually really interested in Anomalith.\
+`Normally, FuRyu's output as a publisher is less than stellar, but I simply cannot ignore a game with Tanaka Romeo as the lead writer.\
+lsp 3,":c;img/pickle.png",488,312
+`Pokemon Bank is also shutting down in a few months, so I feel this mild sense of urgency to get whatever critters I want and transfer them up.\
+csp 3
+
+`By the way...@ What is it you love to do?@ What brings you joy?\
+`For me, it feels like those answers become less immuatable by the day.\
+`Sometimes joy reveals itself in a good meal with Mrs. Bass.@ Other times, it comes in the form of a new song from a band I love.\
+`However, the longer my time on this rock becomes, the more I come to appreciate each small joy that life has to offer.\
+`I just would not have guessed that one of those would be a short story about some friends making summer memories.\
+
+`Oh, uh...@sorry for waxing poetic a little bit.@ That's not usually my thing.\
+`Alright, that's enough reading, writing, and porting for today.\ 
+lsp 3,":c;img/knk.png",488,312
+`I need to get back to reading Kara no Kyoukai soon.@ If I don't...@they're gonna get me.\
+csp 3
+
+`Thank you very much for checking out this port of Tsuugakuro.@ I hope we can meet again someday.\
+
+`-Billy
+`    2026-09-17
+` 
+`    http://btuberbilly.github.io/doujinarchive\
+
+csp -1
+
+goto *restart
+
+*ssr_jp
+langjp "このスタッフルームは英語版があるだけです。タイトルに戻りたいですか？\"
+select "はい",*restart,
+"いいえ",*ssr_cont
+*ssr_cont
+return
+
+; BILLYDEBUG ENG START
+
+*langjp
+getparam $tmptxt
+if %curlang=1 return
+$tmptxt
+return
+
+*langen
+getparam $tmptxt
+if %curlang=0 return
+$tmptxt
+return
+
+*setwindowcaption
+if %curlang=1 caption "Tsuugakuro ~Summer Window~ Complete Edition"
+if %curlang=0 caption "通学路　～夏窓～　完全版"
+return
+
+*togglelang
+caption "TEST"
+if %curlang=1 mov %curlang,0
+if %curlang=0 mov %curlang,1
+gosub *setwindowcaption
+return
+
+*endemoquit
+`This is where the English translation demo ends. Would you like to return to the title screen?
+select "Yes", *endemorestart,
+"No",*endemocont
+*endemocont
+return
+
+*endemorestart
+csp -1
+stop
+goto *restart
+
+reset
