@@ -4,19 +4,21 @@
 ## Table of Contents
 
 - [Tsuugakuro ~Natsu Mado~ Summer Window](#tsuugakuro-natsu-mado-summer-window)
-	- [Table of Contents](#table-of-contents)
-	- [About this Project](#about-this-project)
-	- [Installation](#installation)
-		- [Installing the Original Game](#installing-the-original-game)
-		- [Installing the Port](#installing-the-port)
-	- [Features](#features)
-		- [Finished](#finished)
-		- [Planned](#planned)
-		- [Unplanned](#unplanned)
-	- [Screenshots](#screenshots)
-	- [Original Credits](#original-credits)
-	- [Port Credits](#port-credits)
-	- [Software Used](#software-used)
+  - [Table of Contents](#table-of-contents)
+  - [About this Project](#about-this-project)
+  - [Installation](#installation)
+    - [Installing the Original Game](#installing-the-original-game)
+    - [Installing the Port (Patch Only)](#installing-the-port-patch-only)
+    - [Installing the Port (Full)](#installing-the-port-full)
+  - [Features](#features)
+    - [Finished](#finished)
+    - [Planned](#planned)
+    - [Unplanned](#unplanned)
+  - [Screenshots](#screenshots)
+  - [Original Credits](#original-credits)
+  - [Port Credits](#port-credits)
+  - [Software Used](#software-used)
+
 
 ## About this Project
 
@@ -73,12 +75,22 @@ This repo assumes you have sourced your own copy of the game. I will not be dist
 
 ![img](repo/cleanfolder.png)
 
-### Installing the Port
+### Installing the Port (Patch Only)
 
 1) Download the latest build from the Releases tab
 2) Open the .zip file
-3) Extract its contents into the game directory.
+3) Extract its contents into the directory where you installed Tsuugakuro.
 4) Launch `Tsuugakuro-ONSEN.exe` to make sure it was installed correctly
+
+### Installing the Port (Full)
+
+1) Download the latest build from the Releases tab
+2) Launch the .exe
+3) You will be prompted for a password.
+  1) It can be found on the back of the packaging for the original game.
+  2) It is the postage code for NECORO-GIRL, denoted by the `〒` symbol.
+  3) Make sure to include the `-` hyphen!
+4) Launch `Tsuugakuro-ONSEN.exe` and enjoy. 
 
 ## Features
 
