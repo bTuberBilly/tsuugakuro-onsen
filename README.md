@@ -88,27 +88,18 @@ This repo assumes you have sourced your own copy of the game. I will not be dist
   * Fully ported and completable in Japanese
 * Multilanguage Support
   * Currently just Japanese and English
-* English prologue
-  * A small portion of the opening has been translated into English
+* English translation
+  * The entire game is playable in English!
 * Save anywhere
   * Save and reload at will using the right click menu
   * The original pre-set save points were also recreated
 
 ### Planned
 
-* Full English translation
-  * As mentioned above, only the prologue is translated at the moment. I would like to see the rest of the game translated.
-* CG Gallery
-  * the original game had a CG gallery, but it was extremely barebones
-  * I haven't decided if I want to make a more elegant gallery or just recreate it as-is yet
 * Attract Mode
   * Idling on the title screen would cause a few curated scenes to play out.
   * I can either try recreating this within the script, or I could record the original exe's opening as a video file
-* Recreate the Logo intro animation
-* Fix the timing on the text cursor
-* All ages version
-  * There is one CG with a single nipple that I would like to omit in a future all ages version, mainly for anyone interested in streaming or otherwise playing this game under the public eye.
-
+ 
 ### Unplanned
 
 * Animation toggle
@@ -145,6 +136,19 @@ This repo assumes you have sourced your own copy of the game. I will not be dist
   * Graphics
   * Translation
   * Editing
+* Aru
+  * Editing
+  * Playtesting
+* WatashiOurs
+  * Playtesting
+* Haviary
+  * Playtesting
+* jinsucks
+  * Playtesting
+* Nikki Triplett
+  * Playtesting
+* DoodleRob
+  * Playtesting
 
 ## Software Used
 
