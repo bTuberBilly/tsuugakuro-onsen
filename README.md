@@ -86,11 +86,12 @@ This repo assumes you have sourced your own copy of the game. I will not be dist
 
 1) Download the latest build from the Releases tab
 2) Launch the .exe
-3) You will be prompted for a password.
-  1) It can be found on the back of the packaging for the original game.
-  2) It is the postage code for NECORO-GIRL, denoted by the `〒` symbol.
-  3) Make sure to include the `-` hyphen!
+3) You will be prompted for a password. It can be found on the back of the packaging for the original game. It is the postage code for NECORO-GIRL, denoted by the `〒` symbol. Make sure to include the `-` hyphen!
 4) Launch `Tsuugakuro-ONSEN.exe` and enjoy. 
+
+Password example:
+
+![img](repo/password.png)
 
 ## Features
 
