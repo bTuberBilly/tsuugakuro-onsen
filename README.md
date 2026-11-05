@@ -18,13 +18,15 @@
   - [Original Credits](#original-credits)
   - [Port Credits](#port-credits)
   - [Software Used](#software-used)
-
+  - [Misc Notes](#misc-notes)
+    - [Android](#android)
+    - [Jyura's / Jura's Name](#jyuras--juras-name)
 
 ## About this Project
 
 **NO MACHINE TRANSLATION OR ANY OTHER FORM OF GENERATIVE AI WAS USED IN THIS PROJECT**
 
-This is a port of the doujin novel game "通学路～夏窓～サマーウィンドウ" (Tsuugakuro ~Natsu Mado~ Summer Window) by ねころがーる (Nekoro Girl).
+This is a port of the doujin novel game "通学路～夏窓～サマーウィンドウ" (Tsuugakuro ~Natsu Mado~ Summer Window) by ねころがーる (NECORO-GIRL).
 
 Tsuugakuro released in 1998 for Windows. Specifically, it released as a 16-bit Windows game meant to be played on Windows 95 or 98. This poses a problem for people hoping to enjoy the game today since you'd have to jump through a few hoops just to get the game running.
 
@@ -133,7 +135,7 @@ Password example:
 ## Original Credits
 
 * Produced
-  * ねころがーる (Nekoro Girl)
+  * ねころがーる (NECORO-GIRL)
 * Programming
   * 大胆不敵 (Daitanfuteki)
 * Script & Event Programming
@@ -172,3 +174,13 @@ Password example:
   * was instrumental in poking at the original .exe
 * [ONScripter-EN](https://github.com/Galladite27/ONScripter-EN)
   * New game engine
+
+## Misc Notes
+
+### Android
+
+User **redalchemy6** on Reddit confirmed the game runs fine on Android using GameHub Lite. They first attempted running the game with ONScripter Plus, but they confirmed that version has issues with text display.
+
+### Jyura's / Jura's Name
+
+I started writing this section out, but it just felt like me trying to justify changing the transliteration of a character's name just because I feel like Jura looks better than Jyura. So, I've decided to change her name to Jyura in the script in order to match the official transliteration found in the game's files.
