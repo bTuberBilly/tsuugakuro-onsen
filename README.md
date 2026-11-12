@@ -179,7 +179,7 @@ Password example:
 
 ### Android
 
-User **redalchemy6** on Reddit confirmed the game runs fine on Android using GameHub Lite. They first attempted running the game with ONScripter Plus, but they confirmed that version has issues with text display.
+User **redalchemy6** on Reddit confirmed the game runs fine on Android using [Winlator](https://github.com/brunodev85/winlator). They first attempted running the game with ONScripter Plus, but they confirmed that version has issues with text display.
 
 ### Jyura's / Jura's Name
 
